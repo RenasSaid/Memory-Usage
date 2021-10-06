@@ -1,3 +1,4 @@
 #!/usr/bin/env python3
 
-Print("Hej, testar git, add och commit")
+print("Hej, testar git, add och commit")
+print("test2")
