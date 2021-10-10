@@ -1,1 +1,9 @@
 [Unit]
+Description=Memory usage service
+
+[Service]
+ExecStart=/bin/bash /usr/sbin/NAMN.sh
+
+[Install]
+WantedBy=multi-user.target
+
