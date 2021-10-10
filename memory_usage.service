@@ -2,7 +2,7 @@
 Description=Memory usage service
 
 [Service]
-ExecStart=/bin/bash /usr/sbin/NAMN.sh
+ExecStart=/bin/bash /usr/sbin/memory_usage.py
 
 [Install]
 WantedBy=multi-user.target
