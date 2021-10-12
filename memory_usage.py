@@ -11,16 +11,29 @@ class Memory_Check(object):
         self.memory_limit = memory_limit
         self.minutes = minutes
         
-        self.run_timers()
+        self.memory_limit = self.convert_memory_limit_to_bytes(self.memory_limit)
+        
+        self.memory_limit = int(self.memory_limit)
+        self.run_timers(self.memory_limit, self.minutes)
 
-        over_the_limit = self.check_memory_usage(self.memory_limit, self.minutes)
+    def convert_memory_limit_to_bytes(self, memory_limit):
+        if(memory_limit[-1] == "M"):
+            memory_limit = float(memory_limit.replace("M", ""))
+            memory_limit *= 10 ** 6
+            return memory_limit
 
-        message_user(over_the_limit)
+        elif(memory_limit[-1] == "G"):
+            memory_limit = float(memory_limit.replace("G", ""))
+            memory_limit *= 10 ** 9
+            return memory_limit
 
-        pass
+        else:
+            if(memory_limit.isnumeric()):
+                memory_limit = float(memory_limit)
+                return memory_limit
+            else:
+                print("Memory limit must be numeric or given in [M]egabytes or [G]igabytes.")
 
-    def check_memory_usage(self, memory_limit, minutes):
-        pass
          
     def message_user(self, over_the_limit):
         if(over_the_limit == True):
