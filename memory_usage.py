@@ -34,32 +34,37 @@ class Memory_Check(object):
             else:
                 print("Memory limit must be numeric or given in [M]egabytes or [G]igabytes.")
 
-         
-    def message_user(self, over_the_limit):
-        if(over_the_limit == True):
-            pass
-        else:
-            print("Memory limit has not been reached.")
+   def run_timers(self, memory_limit, minutes): #starta timers
+        minutes *= 60
+        while(True): 
+            self.check_memory_usage(memory_limit)
+            time.sleep(minutes)  
 
-    def run_timers(self, shorter, longer): #starta timers
-        time_passed = 0
-        while(True):
-            if(time_passed < longer)    
-                self.shorter_event()
-                time.sleep(shorter)
-                time_passed += shorter
-            else:
-                self.shorter_event()
-                self.longer_event()
-                time_passed = 0
+    def check_memory_usage(self, memory_limit):
+        current_memory_usage = os.popen("free -tm").read().splitlines()
+        memory_line = current_memory_usage[1].split()
         
+        memory_limit //= 1000
+        current_used = memory_line[2]
+        
+        if(current_used > memory_limit):
+            self.create_log()
+        else:
+            #write 1 line in log to say things are ok
+         
+    def create_log(self, over_the_limit):
+        memory = os.popen("ps aux | grep -v python3 | grep -v aux").read().splitlines()
+        memory_list = []
 
-    def shorter_event(self): #event var 5min, kolla om över 50Mb ram usage 
-        print("5min")
-
-    def longer_event(self): #event var 60min, kolla om över 1Gb ram usage
-        print("60min")
-
+        for line in memory:
+            memory_list.append(line.split())
+        
+        ## TODO: Rewrite this part to write to log instead
+        for line in memory_list:
+            if(line[4] == "VSZ"):
+                print(line[1], ":", line[4], " - ", line[10])
+            elif(int(line[4]) > 0):
+         
 if(__name__ == "__main__"):
     args = sys.argv[1:]
 
