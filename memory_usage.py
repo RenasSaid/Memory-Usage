@@ -34,7 +34,7 @@ class Memory_Check(object):
             else:
                 print("Memory limit must be numeric or given in [M]egabytes or [G]igabytes.")
 
-   def run_timers(self, memory_limit, minutes): #starta timers
+    def run_timers(self, memory_limit, minutes): #starta timers
         minutes *= 60
         while(True): 
             self.check_memory_usage(memory_limit)
@@ -45,14 +45,16 @@ class Memory_Check(object):
         memory_line = current_memory_usage[1].split()
         
         memory_limit //= 1000
-        current_used = memory_line[2]
+        current_used = int(memory_line[2])
         
         if(current_used > memory_limit):
             self.create_log()
         else:
+            print("everything ok yo.")
+            sys.exit()
             #write 1 line in log to say things are ok
          
-    def create_log(self, over_the_limit):
+    def create_log(self):
         memory = os.popen("ps aux | grep -v python3 | grep -v aux").read().splitlines()
         memory_list = []
 
@@ -61,9 +63,8 @@ class Memory_Check(object):
         
         ## TODO: Rewrite this part to write to log instead
         for line in memory_list:
-            if(line[4] == "VSZ"):
+            if(line[4] == "VSZ" or int(line[4]) > 0):
                 print(line[1], ":", line[4], " - ", line[10])
-            elif(int(line[4]) > 0):
          
 if(__name__ == "__main__"):
     args = sys.argv[1:]
