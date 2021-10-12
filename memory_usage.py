@@ -21,31 +21,30 @@ class Memory_Check(object):
 
     def check_memory_usage(self, memory_limit, minutes):
         pass
-        
-    
+         
     def message_user(self, over_the_limit):
         if(over_the_limit == True):
             pass
         else:
             print("Memory limit has not been reached.")
 
-    def run_timers(self): #starta timers
-        interval =0
+    def run_timers(self, shorter, longer): #starta timers
+        time_passed = 0
         while(True):
-            time.sleep(1)
-            self.five_min_event()
-            interval += 1
-
-            if (interval == 12):
-                self.five_min_event()
-                self.sixty_min_event()
-                interval = 0
+            if(time_passed < longer)    
+                self.shorter_event()
+                time.sleep(shorter)
+                time_passed += shorter
+            else:
+                self.shorter_event()
+                self.longer_event()
+                time_passed = 0
         
 
-    def five_min_event(self): #event var 5min, kolla om över 50Mb ram usage 
+    def shorter_event(self): #event var 5min, kolla om över 50Mb ram usage 
         print("5min")
 
-    def sixty_min_event(self): #event var 60min, kolla om över 1Gb ram usage
+    def longer_event(self): #event var 60min, kolla om över 1Gb ram usage
         print("60min")
 
 if(__name__ == "__main__"):
