@@ -2,6 +2,7 @@
 
 test.py
 testar.txt
+*.orig
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
