@@ -1,7 +1,7 @@
-# Just to show
+# Our testfiles for ignore
 
-all_my_secrets.txt
 test.py
+testar.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

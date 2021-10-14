@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys, os, time
+from datetime import datetime
 
 class Memory_Check(object):
     def __init__(self):
@@ -46,26 +47,47 @@ class Memory_Check(object):
         
         memory_limit //= 1000
         current_used = int(memory_line[2])
+
+        file_name = "/var/log/memory_usage.log"
         
         if(current_used > memory_limit):
-            self.create_log()
+            self.create_log(file_name)
         else:
-            print("everything ok yo.")
-            sys.exit()
-            #write 1 line in log to say things are ok
+            time_stamp = datetime.now().replace(microsecond=0)
+            message = '{}: Everything ok yo!\n'.format(time_stamp)
+            
+            if(not os.path.exists(file_name)):
+                with open(file_name, 'w') as test_file:
+                    test_file.write(message)
+            else:
+                with open(file_name, 'a') as test_file:
+                    test_file.write(message)
          
-    def create_log(self):
+    def create_log(self, file_name):
         memory = os.popen("ps aux | grep -v python3 | grep -v aux").read().splitlines()
         memory_list = []
 
         for line in memory:
             memory_list.append(line.split())
-        
-        ## TODO: Rewrite this part to write to log instead
-        for line in memory_list:
+     
+        list_to_write = []
+
+        for line in memory_list: 
             if(line[4] == "VSZ" or int(line[4]) > 0):
-                print(line[1], ":", line[4], " - ", line[10])
+                the_line = line[1], ":", line[4], " - ", line[10]
+                list_to_write.append(the_line) 
          
+        time_stamp = datetime.now().replace(microsecond=0) 
+        if(not os.path.exists(file_name)): 
+            with open(file_name, 'w') as test_file: 
+                for line in list_to_write: 
+                    test_file.write('{}: {}\n'.format(time_stamp, line)) 
+        else: 
+            with open(file_name, 'a') as test_file: 
+                for line in list_to_write: 
+                    test_file.write('{}: {}\n'.format(time_stamp, line))
+
+
 if(__name__ == "__main__"):
     args = sys.argv[1:]
 
