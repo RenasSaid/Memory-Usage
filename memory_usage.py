@@ -11,43 +11,61 @@ class Memory_Check(object):
         self.memory_limit = memory_limit
         self.minutes = minutes
         
-        self.run_timers()
-
-        over_the_limit = self.check_memory_usage(self.memory_limit, self.minutes)
-
-        message_user(over_the_limit)
-
-        pass
-
-    def check_memory_usage(self, memory_limit, minutes):
-        pass
+        self.memory_limit = self.convert_memory_limit_to_bytes(self.memory_limit)
         
-    
-    def message_user(self, over_the_limit):
-        if(over_the_limit == True):
-            pass
+        self.memory_limit = int(self.memory_limit)
+        self.run_timers(self.memory_limit, self.minutes)
+
+    def convert_memory_limit_to_bytes(self, memory_limit):
+        if(memory_limit[-1] == "M"):
+            memory_limit = float(memory_limit.replace("M", ""))
+            memory_limit *= 10 ** 6
+            return memory_limit
+
+        elif(memory_limit[-1] == "G"):
+            memory_limit = float(memory_limit.replace("G", ""))
+            memory_limit *= 10 ** 9
+            return memory_limit
+
         else:
-            print("Memory limit has not been reached.")
+            if(memory_limit.isnumeric()):
+                memory_limit = float(memory_limit)
+                return memory_limit
+            else:
+                print("Memory limit must be numeric or given in [M]egabytes or [G]igabytes.")
 
-    def run_timers(self): #starta timers
-        interval =0
-        while(True):
-            time.sleep(1)
-            self.five_min_event()
-            interval += 1
+    def run_timers(self, memory_limit, minutes): #starta timers
+        minutes *= 60
+        while(True): 
+            self.check_memory_usage(memory_limit)
+            time.sleep(minutes)  
 
-            if (interval == 12):
-                self.five_min_event()
-                self.sixty_min_event()
-                interval = 0
+    def check_memory_usage(self, memory_limit):
+        current_memory_usage = os.popen("free -tm").read().splitlines()
+        memory_line = current_memory_usage[1].split()
         
+        memory_limit //= 1000
+        current_used = int(memory_line[2])
+        
+        if(current_used > memory_limit):
+            self.create_log()
+        else:
+            print("everything ok yo.")
+            sys.exit()
+            #write 1 line in log to say things are ok
+         
+    def create_log(self):
+        memory = os.popen("ps aux | grep -v python3 | grep -v aux").read().splitlines()
+        memory_list = []
 
-    def five_min_event(self): #event var 5min, kolla om över 50Mb ram usage 
-        print("5min")
-
-    def sixty_min_event(self): #event var 60min, kolla om över 1Gb ram usage
-        print("60min")
-
+        for line in memory:
+            memory_list.append(line.split())
+        
+        ## TODO: Rewrite this part to write to log instead
+        for line in memory_list:
+            if(line[4] == "VSZ" or int(line[4]) > 0):
+                print(line[1], ":", line[4], " - ", line[10])
+         
 if(__name__ == "__main__"):
     args = sys.argv[1:]
 
