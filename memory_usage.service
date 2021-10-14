@@ -1,8 +1,16 @@
 [Unit]
-Description=Memory usage service
+Description=Service to check RAM memory usage
+
+Wants=network.target
+After=syslog.target network-online.target
 
 [Service]
-ExecStart=/bin/bash /usr/sbin/memory_usage.py
+EnvironmentFile=/etc/systemd/system/.memory_usage.conf
+ExecStart=/usr/bin/memory_usage.py $ARG1 $ARG2
+ExecStop=/usr/bin/memory_usage.py
+Restart=on-failure
+RestartSec=10
+KillMode=process
 
 [Install]
 WantedBy=multi-user.target
