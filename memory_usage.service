@@ -1,12 +1,12 @@
 [Unit]
-Description=Service to check RAM memory usage
+Description=Service to check RAM memory usage limit
 
 Wants=network.target
 After=syslog.target network-online.target
 
 [Service]
 EnvironmentFile=/etc/systemd/system/.memory_usage.conf
-ExecStart=/usr/bin/memory_usage.py $ARG1 $ARG2
+ExecStart=/usr/bin/memory_usage.py $ARG1 $ARG2 $ARG3
 ExecStop=/usr/bin/memory_usage.py
 Restart=on-failure
 RestartSec=10
