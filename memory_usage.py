@@ -4,8 +4,7 @@ import sys, os, time
 from datetime import datetime
 
 class Memory_Check(object):
-    def __init__(self, email):
-        self.email = email
+    def __init__(self):
         self.memory_limit = ""
         self.minutes = 0
 
@@ -94,12 +93,6 @@ if(__name__ == "__main__"):
 
     memory_limit = args[0]
     minutes = int(args[1])
-    if (args.length > 2):
-        email = args[2]
 
-if (not email is None):
-    memory_check = Memory_Check(email)
-else:
-    memory_check = Memory_Check()
-
+memory_check = Memory_Check()
 memory_check.main(memory_limit, minutes)
