@@ -12,7 +12,7 @@ Files/Directories:
 	* If prior steps has been followed, the service should start at next system reboot.
 	* The log file will automatically created in /var/log/memory_usage.log
 	* Values for memory limit and time can be changed in /etc/systemd/system/.memory_usage.conf
-	* Optional: If you want an e-mail sent to you, you can change the e-mail adress in /etc/systemd/system/.memory_usage.conf.
+	* Optional: If you want an e-mail with log file sent to you, you can change the e-mail adress in /etc/systemd/system/.memory_usage.conf.
 
 ----------------
 
