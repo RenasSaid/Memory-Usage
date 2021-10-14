@@ -1,5 +1,5 @@
 [Unit]
-Description=Service to check RAM memory usage
+Description=Service to check RAM memory usage limit
 
 Wants=network.target
 After=syslog.target network-online.target
