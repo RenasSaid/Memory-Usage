@@ -20,12 +20,12 @@ class Memory_Check(object):
     def convert_memory_limit_to_bytes(self, memory_limit):
         if(memory_limit[-1] == "M"):
             memory_limit = float(memory_limit.replace("M", ""))
-            memory_limit *= 10 ** 6
+            memory_limit *= 1048576
             return memory_limit
 
         elif(memory_limit[-1] == "G"):
             memory_limit = float(memory_limit.replace("G", ""))
-            memory_limit *= 10 ** 9
+            memory_limit *= 1073741824
             return memory_limit
 
         else:
@@ -55,13 +55,15 @@ class Memory_Check(object):
         else:
             time_stamp = datetime.now().replace(microsecond=0)
             message = '{}: Everything ok yo!\n'.format(time_stamp)
-            
+            write_mode = ""
+
             if(not os.path.exists(file_name)):
-                with open(file_name, 'w') as test_file:
-                    test_file.write(message)
+                write_mode = "w"
             else:
-                with open(file_name, 'a') as test_file:
-                    test_file.write(message)
+                write_mode = "a"
+            
+            with open(file_name, write_mode) as test_file:
+                test_file.write(message)
          
     def create_log(self, file_name):
         memory = os.popen("ps aux | grep -v python3 | grep -v aux").read().splitlines()
@@ -78,14 +80,16 @@ class Memory_Check(object):
                 list_to_write.append(the_line) 
          
         time_stamp = datetime.now().replace(microsecond=0) 
-        if(not os.path.exists(file_name)): 
-            with open(file_name, 'w') as test_file: 
-                for line in list_to_write: 
-                    test_file.write('{}: {}\n'.format(time_stamp, line)) 
-        else: 
-            with open(file_name, 'a') as test_file: 
-                for line in list_to_write: 
-                    test_file.write('{}: {}\n'.format(time_stamp, line))
+        write_mode = ""
+
+        if(not os.path.exists(file_name)):
+            write_mode = "w"
+        else:
+            write_mode = "a"
+
+        with open(file_name, write_mode) as test_file: 
+            for line in list_to_write: 
+                test_file.write('{}: {}\n'.format(time_stamp, line)) 
 
 
 if(__name__ == "__main__"):
